@@ -26,7 +26,8 @@ export default async function Home() {
   return (
     <>
       <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-        <a
+        <h1>gfcdhvc</h1>
+        {/* <a
           href="https://twitter.com/steventey/status/1613928948915920896"
           target="_blank"
           rel="noreferrer"
@@ -105,7 +106,7 @@ export default async function Home() {
             }
             large={large}
           />
-        ))}
+        ))} */}
       </div>
     </>
   );
