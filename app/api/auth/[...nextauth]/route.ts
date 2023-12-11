@@ -11,12 +11,12 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    // }),
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: {},
         password: {},
@@ -24,6 +24,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         console.log(credentials);
         const email = credentials?.email;
+        console.log(email);
         const user = await prisma.user.findUnique({
           where: { email },
         });

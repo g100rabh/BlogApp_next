@@ -19,16 +19,18 @@ const LoginForm: React.FC = () => {
       redirect: false,
     });
 
-    // if (!result.ok) {
-    //   alert("Invalid credentials. Please try again.");
-    // }
+    console.log("result", result);
+
+    if (!result.ok) {
+      alert("Invalid credentials. Please try again.");
+    }
 
     console.log(result);
 
-    // if (!result.error) {
-    //   router.push("/");
-    //   router.refresh();
-    // }
+    if (!result.error) {
+      router.push("/");
+      router.refresh();
+    }
   };
 
   return (

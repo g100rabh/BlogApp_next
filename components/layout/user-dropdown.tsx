@@ -54,7 +54,10 @@ export default function UserDropdown({ session }: { session: Session }) {
         >
           <Image
             alt={email}
-            src={image || `https://avatars.dicebear.com/api/micah/${email}.svg`}
+            src={
+              image ||
+              `https://www.gravatar.com/avatar/${email}?d=identicon&s=200`
+            }
             width={40}
             height={40}
           />
