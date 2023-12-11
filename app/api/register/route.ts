@@ -5,7 +5,7 @@ import { hash } from "bcrypt";
 export async function POST(request: Request) {
   console.log(request);
   try {
-    const { email, password, role } = await request.json();
+    const { email, password, token } = await request.json();
 
     const hashedPassword = await hash(password, 10);
 
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
         email: email,
         password: hashedPassword,
         role: roleUser,
+        token: token,
       },
     });
 

@@ -43,6 +43,7 @@ model User {
   createdAt       DateTime @default(now()) @map(name: "created_at")
   updatedAt       DateTime @updatedAt @map(name: "updated_at")
   posts           Post[]
+  token           String
 
   @@map(name: "users")
 }

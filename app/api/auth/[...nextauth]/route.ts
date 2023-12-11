@@ -11,10 +11,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -24,9 +24,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         console.log(credentials);
         const email = credentials?.email;
-        console.log(email);
+        const isEmailVerified = true;
         const user = await prisma.user.findUnique({
-          where: { email },
+          where: { email, isEmailVerified },
         });
 
         if (user) {
@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: user.id,
               email: user.email,
+              isEmailVerified: user.isEmailVerified,
             };
           }
         }

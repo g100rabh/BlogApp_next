@@ -8,9 +8,31 @@ const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [conPassword, setConPassword] = useState<string>("");
 
+  function generateUniqueAlphanumericToken(length: number): string {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const tokenLength = length || 4;
+    const tokens: Set<string> = new Set();
+
+    while (true) {
+      let newToken = "";
+
+      for (let i = 0; i < tokenLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        newToken += characters.charAt(randomIndex);
+      }
+
+      if (!tokens.has(newToken)) {
+        tokens.add(newToken);
+        return newToken;
+      }
+    }
+  }
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (password === conPassword) {
+      const token = generateUniqueAlphanumericToken(4);
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
@@ -19,10 +41,13 @@ const RegisterForm: React.FC = () => {
         body: JSON.stringify({
           email: email,
           password: password,
+          token: token,
         }),
       });
       if (response.ok) {
-        alert("User successfully registered.");
+        alert(
+          "User successfully registered.Go to the URL below to verify your registration. http://localhost:3000/verify",
+        );
         // Reset form state
         setEmail("");
         setPassword("");

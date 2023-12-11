@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 
 const { NextResponse } = require("next/server");
 
-export async function POST(request) {
+export async function POST(request: { json: () => any }) {
   const res = await request.json();
   const { title, content } = res;
   console.log(title, content);
@@ -20,4 +20,16 @@ export async function POST(request) {
     },
   });
   return NextResponse.json({ result });
+}
+export async function GET() {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    include: {
+      author: {
+        select: { email: true },
+      },
+    },
+  });
+
+  return NextResponse.json(posts);
 }

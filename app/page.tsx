@@ -1,5 +1,3 @@
-"use client";
-
 import Card from "@/components/home/card";
 import { DEPLOY_URL } from "@/lib/constants";
 import { Github, Twitter } from "@/components/shared/icons";
@@ -8,6 +6,7 @@ import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
 import { nFormatter } from "@/lib/utils";
 import Link from "next/link";
+import ShowPosts from "@/components/posts/ShowPosts";
 
 export default async function Home() {
   const { stargazers_count: stars } = await fetch(
@@ -29,12 +28,16 @@ export default async function Home() {
   return (
     <>
       <div className="z-10 flex flex-col justify-center px-5 xl:px-0">
-        <Link
-          className="border-gray-2 rounded-md border bg-gray-500 p-2 text-white"
-          href={"/add-post"}
-        >
-          Add post
-        </Link>
+        <div className="mb-4 p-2">
+          <Link
+            className="border-gray-2 rounded-md border bg-gray-500 p-2 text-white"
+            href={"/add-post"}
+          >
+            Add post
+          </Link>
+        </div>
+
+        <ShowPosts />
       </div>
     </>
   );

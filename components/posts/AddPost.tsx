@@ -17,7 +17,7 @@ const AddPost: React.FC<AddPostProps> = ({ onSubmit }) => {
     console.log(title, content);
 
     try {
-      const res = await fetch("api/post-add", {
+      const res = await fetch("api/post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content }),
