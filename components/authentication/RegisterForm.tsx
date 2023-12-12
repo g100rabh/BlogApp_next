@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 
 const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [conPassword, setConPassword] = useState<string>("");
+  const router = useRouter();
 
   function generateUniqueAlphanumericToken(length: number): string {
     const characters =
@@ -49,11 +50,8 @@ const RegisterForm: React.FC = () => {
         // alert(
         //   "User successfully registered.Go to the URL below to verify your registration. http://localhost:3000/verify",
         // );
-        redirect('/verify');
-        // Reset form state
-        setEmail("");
-        setPassword("");
-        setConPassword("");
+        router.push('/verify');
+      
       } else {
         alert("Registration failed. Please try again.");
       }
