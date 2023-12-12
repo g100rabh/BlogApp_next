@@ -10,32 +10,28 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
   const [error, setError] = useState<string>("");
-
+  
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("email", email, password);
+
     const result = await signIn("credentials", {
       email: email,
       password: password,
       redirect: false,
     });
-
-    console.log("result", result);
-
-    if (!result.ok) {
+  
+    if (result && !result.ok) {
       setError("Invalid credentials. Please try again.");
     }
-
-    console.log(result);
-
-    if (!result.error) {
+  
+    if (result && !result.error) {
       router.push("/");
       router.refresh();
-    } else {
+    } else if (result) {
       alert(`${result.error}`);
     }
   };
-
+  
   if (error) {
     setTimeout(() => setError(""), 5000);
   }

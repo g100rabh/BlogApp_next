@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useState, FormEvent } from "react";
 
 const RegisterForm: React.FC = () => {
@@ -45,9 +46,10 @@ const RegisterForm: React.FC = () => {
         }),
       });
       if (response.ok) {
-        alert(
-          "User successfully registered.Go to the URL below to verify your registration. http://localhost:3000/verify",
-        );
+        // alert(
+        //   "User successfully registered.Go to the URL below to verify your registration. http://localhost:3000/verify",
+        // );
+        redirect('/verify');
         // Reset form state
         setEmail("");
         setPassword("");
