@@ -6,6 +6,7 @@ import React from "react";
 
 const SignIn = async () => {
   const session = await getServerSession();
+  console.log(session?.user,"=======>user")
   if (session) {
     redirect("/");
   }

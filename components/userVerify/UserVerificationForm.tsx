@@ -1,12 +1,13 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 
 const UserVerificationForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -32,6 +33,7 @@ const UserVerificationForm: React.FC = () => {
 
       if (res.ok) {
         alert("Verification done successfully");
+        router.push("/signin");
         setEmail("");
         setVerificationCode("");
       } else if (res.status === 404) {

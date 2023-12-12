@@ -8,6 +8,7 @@ const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [conPassword, setConPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const router = useRouter();
 
   function generateUniqueAlphanumericToken(length: number): string {
@@ -46,15 +47,19 @@ const RegisterForm: React.FC = () => {
           token: token,
         }),
       });
-      if (response.ok) {
-        // alert(
-        //   "User successfully registered.Go to the URL below to verify your registration. http://localhost:3000/verify",
-        // );
-        router.push('/verify');
-        // Reset form state
-        // setEmail("");
-        // setPassword("");
-        // setConPassword("");
+      console.log(response);
+      const data = await response.json();
+
+      if (data.message.includes("Success")) {
+        router.push("/verify");
+      } else if (data.message.includes("Email")) {
+        setError(`${data.message}`);
+        setTimeout(() => setError(""), 10000);
+        return;
+      } else if (data.message.includes("Password")) {
+        setError(`${data.message}`);
+        setTimeout(() => setError(""), 30000);
+        return;
       } else {
         alert("Registration failed. Please try again.");
       }
@@ -67,6 +72,13 @@ const RegisterForm: React.FC = () => {
     <div className="flex items-center justify-center">
       <div className="bg-gray flex w-96 flex-col items-center justify-center rounded p-8 shadow-md">
         <h2 className="mb-4 text-2xl font-semibold text-blue-800">Register</h2>
+        {error &&
+          // <p className="w-4/5 text-sm text-red-600">*{error}</p>
+          error.split("/").map((err, i) => (
+            <li key={i} className="w-4/5 text-xs text-red-600">
+              {err}
+            </li>
+          ))}
         <form onSubmit={handleFormSubmit}>
           <div className="mb-4">
             <label
