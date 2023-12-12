@@ -9,6 +9,7 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
+  const [error, setError] = useState<string>("");
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ const LoginForm: React.FC = () => {
     console.log("result", result);
 
     if (!result.ok) {
-      alert("Invalid credentials. Please try again.");
+      setError("Invalid credentials. Please try again.");
     }
 
     console.log(result);
@@ -30,13 +31,20 @@ const LoginForm: React.FC = () => {
     if (!result.error) {
       router.push("/");
       router.refresh();
+    } else {
+      alert(`${result.error}`);
     }
   };
+
+  if (error) {
+    setTimeout(() => setError(""), 5000);
+  }
 
   return (
     <div className="flex items-center justify-center">
       <div className="flex w-96 flex-col items-center justify-center rounded bg-white p-8 shadow-md">
         <h2 className="mb-4 text-2xl font-semibold text-blue-800">Sign In</h2>
+        {error && <p className="font-sans text-sm text-red-500">*{error}</p>}
         <form onSubmit={handleFormSubmit}>
           <div className="mb-4">
             <label

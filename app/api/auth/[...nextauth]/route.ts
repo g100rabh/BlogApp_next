@@ -43,9 +43,16 @@ export const authOptions: NextAuthOptions = {
               email: user.email,
               isEmailVerified: user.isEmailVerified,
             };
+          } else {
+            // Incorrect password
+            throw new Error("Invalid password");
           }
+        } else {
+          // User not found
+          throw new Error(
+            "User not found. Please check credentials or verify email before sign in.",
+          );
         }
-        return null;
       },
     }),
   ],
