@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function POST(request: {
@@ -44,4 +45,36 @@ export async function POST(request: {
       { status: 500 },
     );
   }
+}
+
+export async function GET() {
+  const session = await getServerSession();
+
+  if (session && session.user) {
+    const email = session.user.email;
+    if (email) {
+      const userData = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      return NextResponse.json(userData);
+    }
+  }
+}
+
+export async function PUT(request: Request) {
+  const session = await getServerSession();
+  const email = session?.user?.email || "";
+
+  const newData = await request.json();
+  console.log(newData);
+
+  const res = await prisma.user.update({
+    where: { email },
+    data: {
+      ...newData,
+    },
+  });
+
+  return NextResponse.json({});
 }

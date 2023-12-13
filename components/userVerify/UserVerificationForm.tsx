@@ -9,6 +9,14 @@ const UserVerificationForm: React.FC = () => {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
+  const getProfileComplete = async () => {
+    const res = await fetch("/api/user", {
+      method: "GET",
+    });
+  };
+
+  getProfileComplete();
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };

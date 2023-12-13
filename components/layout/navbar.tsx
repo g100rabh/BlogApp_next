@@ -33,6 +33,12 @@ export default function NavBar({ session }: { session: Session | null }) {
             ></Image>
             <p>Caffiene Blog</p>
           </Link>
+          <Link
+            className="rounded px-2 py-1 hover:bg-slate-300"
+            href="/dashboard"
+          >
+            Dashbord
+          </Link>
           <div>
             {session ? (
               <UserDropdown session={session} />
