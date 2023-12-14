@@ -3,6 +3,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import the styles
+import LocationInput from "../location/LocationInput";
 
 interface UserData {
   email?: string;
@@ -173,6 +174,7 @@ const ProfileCompleteForm: React.FC = () => {
             >
               Location/Address:
             </label>
+            {/* <LocationInput /> */}
             <input
               type="text"
               id="location"
