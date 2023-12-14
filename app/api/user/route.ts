@@ -69,12 +69,21 @@ export async function PUT(request: Request) {
   const newData = await request.json();
   console.log(newData);
 
-  const res = await prisma.user.update({
-    where: { email },
-    data: {
-      ...newData,
-    },
-  });
-
+  if (newData.mobile_number) {
+    const res = await prisma.user.update({
+      where: { email },
+      data: {
+        ...newData,
+        isProfileComplete: true,
+      },
+    });
+  } else {
+    const res = await prisma.user.update({
+      where: { email },
+      data: {
+        ...newData,
+      },
+    });
+  }
   return NextResponse.json({});
 }

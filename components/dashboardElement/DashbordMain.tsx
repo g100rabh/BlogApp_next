@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function DashbordMain() {
-  const [isProfileCompleted, setIsProfileCompleted] = useState();
   const getProfileComplete = async () => {
     try {
       const res = await fetch("/api/profilecomplete", {
@@ -13,16 +12,17 @@ export default function DashbordMain() {
       console.log(res);
       if (res.ok) {
         const data = await res.json();
-        setIsProfileCompleted(data);
+        console.log(data);
+        return data;
+        // setIsProfileCompleted(data);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getProfileComplete();
-  }, []);
+  const isProfileCompleted = getProfileComplete();
+  console.log(isProfileCompleted);
 
   if (!isProfileCompleted) {
     redirect("/profile");

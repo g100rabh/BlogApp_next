@@ -7,6 +7,24 @@ import Image from "next/image";
 import { nFormatter } from "@/lib/utils";
 import Link from "next/link";
 import ShowPosts from "@/components/posts/ShowPosts";
+import { getServerSession } from "next-auth";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+
+const getProfileComplete = async () => {
+  const session = await getServerSession();
+  const email = session?.user?.email;
+  try {
+    if (email) {
+      const res = await prisma?.user.findUnique({
+        where: { email },
+      });
+      return res?.isProfileComplete;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export default async function Home() {
   const { stargazers_count: stars } = await fetch(
@@ -24,6 +42,9 @@ export default async function Home() {
   )
     .then((res) => res.json())
     .catch((e) => console.log(e));
+
+  const isProfileCompleted = await getProfileComplete();
+  if (!isProfileCompleted) redirect("/profile");
 
   return (
     <>
