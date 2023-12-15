@@ -26,11 +26,11 @@ export default async function RootLayout({
         <Suspense fallback="...">
           <Nav />
         </Suspense>
-        <main className="flex min-h-screen w-full flex-col items-center px-16 py-24">
+        <main className="flex min-h-screen w-full flex-col items-center  py-24">
           {children}
         </main>
-        <Footer />
-        <Analytics />
+        {/* <Footer /> */}
+        {/* <Analytics /> */}
       </body>
     </html>
   );

@@ -7,9 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "mysql"
+  url       = env("DATABASE_URL") 
 }
 
 model Post {
@@ -29,6 +28,7 @@ enum Role {
   USER
   ADMIN
   MODERATOR
+  AUTHOR
 }
 
 model User {
@@ -47,7 +47,9 @@ model User {
   mobile_number    String?
   address          String?
   profile_pic      String?
-  isPofileComplete Boolean  @default(false)
+  isProfileComplete Boolean  @default(false)
+  createdShows     ShowDetails[]
+
 
   @@map(name: "users")
 }
@@ -74,3 +76,47 @@ model CommentReply {
 
   @@map(name: "commentReply")
 }
+
+model ShowDetails {
+  id                String      @id @default(cuid())
+  showName          String
+  showType          String
+  showDateAndTime   DateTime
+  noOfTickets       Int
+  createdBy         User        @relation(fields: [createdById], references: [id])
+  createdById       String
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  showTickets       ShowTicket[]
+
+  @@map(name: "showDetails")
+}
+
+enum ShowMode {
+  ONLINE
+  OFFLINE
+  BOTH
+}
+
+model ShowTicket {
+  id           String     @id @default(cuid())
+  showId       String?
+  showMode     ShowMode
+  categories   String
+  showDetailId String
+  showDetail   ShowDetails @relation(fields: [showDetailId], references: [id])
+
+  @@map(name: "showTickets")
+}
+
+
+// model TicketCategory {
+//   id       String @id @default(cuid())
+//   name     String
+//   quantity Int
+//   price    Float
+//   showTicketId String
+//   showTicket   ShowTicket @relation(fields: [showTicketId], references: [id])
+
+//   @@map(name: "ticketCategories")
+// } 
+
