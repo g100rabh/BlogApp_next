@@ -69,7 +69,7 @@ export async function PUT(request: Request) {
   const newData = await request.json();
   let result;
 
-  if (newData.pincode.length < 6) {
+  if (newData.pincode && newData.pincode.length < 6) {
     result = { error: "Pincode should be at least 6 characters" };
   } else {
     const res = await prisma.user.update({
@@ -81,6 +81,20 @@ export async function PUT(request: Request) {
     result = res;
   }
 
-  // if (res.mobile_number && res.country && res.state && res.city)
+  if (
+    result.mobile_number &&
+    result.country &&
+    result.state &&
+    result.city &&
+    result.pincode
+  ) {
+    const res = await prisma.user.update({
+      where: { email },
+      data: {
+        isProfileComplete: true,
+      },
+    });
+    result = res;
+  }
   return NextResponse.json(result);
 }
