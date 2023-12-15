@@ -4,6 +4,6 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React from "react";
 
-export default function Dasboard() {
+export default async function Dasboard() {
   return <DashbordMain />;
 }

@@ -12,19 +12,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Post {
-  id        String    @id @default(cuid())
-  title     String
-  content   String?
-  postedAt  DateTime  @default(now()) @map(name: "posted_at")
-  published Boolean   @default(false)
-  author    User?     @relation(fields: [authorId], references: [id])
-  authorId  String?
-  comments  Comment[]
-
-  @@map(name: "posts")
-}
-
 enum Role {
   USER
   ADMIN
@@ -32,45 +19,26 @@ enum Role {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  first_name        String?
-  last_name         String?
-  email             String?  @unique
-  password          String
-  role              Role?    @default(USER)
-  isEmailVerified   Boolean  @default(false)
-  isActive          Boolean  @default(false)
-  createdAt         DateTime @default(now()) @map(name: "created_at")
-  updatedAt         DateTime @updatedAt @map(name: "updated_at")
-  posts             Post[]
-  token             String?
-  mobile_number     String?
-  address           String?
-  profile_pic       String?
-  isProfileComplete Boolean  @default(false)
+  id            String   @id @default(cuid())
+  first_name    String?
+  last_name     String?
+  email         String?  @unique
+  password      String
+  role          Role?    @default(USER)
+  isVerified    Boolean  @default(false)
+  isActive      Boolean  @default(false)
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  updatedAt     DateTime @updatedAt @map(name: "updated_at")
+  token         String?
+  mobile_number String?
+  address       String?
+  country       String?
+  state         String?
+  city          String?
+  pincode       String?
+  profile_pic   String?
+
+  isProfileComplete Boolean @default(false)
 
   @@map(name: "users")
-}
-
-model Comment {
-  id           String         @id @default(cuid())
-  content      String?
-  email        String?
-  postId       String?
-  commentedAt  DateTime       @default(now()) @map(name: "commented_at")
-  post         Post?          @relation(fields: [postId], references: [id])
-  CommentReply CommentReply[]
-
-  @@map(name: "comments")
-}
-
-model CommentReply {
-  id        String   @id @default(cuid())
-  content   String?
-  email     String?
-  commentId String?
-  repliedAt DateTime @default(now()) @map(name: "replied_at")
-  comment   Comment? @relation(fields: [commentId], references: [id])
-
-  @@map(name: "commentReply")
 }

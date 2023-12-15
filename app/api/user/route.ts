@@ -18,7 +18,7 @@ export async function POST(request: {
       const res = await prisma.user.update({
         where: { email },
         data: {
-          isEmailVerified: true,
+          isVerified: true,
           isActive: true,
           token: "",
         },
@@ -67,16 +67,10 @@ export async function PUT(request: Request) {
   const email = session?.user?.email || "";
 
   const newData = await request.json();
-  console.log(newData);
+  let result;
 
-  if (newData.mobile_number) {
-    const res = await prisma.user.update({
-      where: { email },
-      data: {
-        ...newData,
-        isProfileComplete: true,
-      },
-    });
+  if (newData.pincode.length < 6) {
+    result = { error: "Pincode should be at least 6 characters" };
   } else {
     const res = await prisma.user.update({
       where: { email },
@@ -84,6 +78,9 @@ export async function PUT(request: Request) {
         ...newData,
       },
     });
+    result = res;
   }
-  return NextResponse.json({});
+
+  // if (res.mobile_number && res.country && res.state && res.city)
+  return NextResponse.json(result);
 }

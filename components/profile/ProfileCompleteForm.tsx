@@ -1,11 +1,19 @@
 "use client";
 
 import React, { FormEvent, useEffect, useState } from "react";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import the styles
-import LocationInput from "../location/LocationInput";
+import { useRouter } from "next/navigation";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { City, Country } from "country-state-city";
+import CityDropdown from "../location/CityDropdown";
+// import "react-dropdown/style.css";
 
 interface UserData {
+  pincode: string;
+  state: string;
+  city: string;
+  country: string;
   email?: string;
   mobile_number?: string;
   first_name?: string;
@@ -19,6 +27,13 @@ const ProfileCompleteForm: React.FC = () => {
   const [fName, setFName] = useState<string>("");
   const [lName, setLName] = useState<string>("");
   const [address, setAddress] = useState<string>("");
+  const [error, setError] = useState<string>();
+  const router = useRouter();
+
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
 
   const getUserData = async () => {
     try {
@@ -44,15 +59,34 @@ const ProfileCompleteForm: React.FC = () => {
     setFName(userData.first_name || "");
     setLName(userData.last_name || "");
     setAddress(userData.address || "");
+    setCountry(userData.country || "");
+    setCity(userData.city || "");
+    setState(userData.state || "");
+    setPincode(userData.pincode || "");
   }, [userData]);
 
   const handlePhoneChange = (value: string) => {
+    if (value) {
+      const parsedPhoneNumber = parsePhoneNumber(value);
+      if (parsedPhoneNumber && parsedPhoneNumber.nationalNumber.length > 10) {
+        setError("Phone number should not more than 10 digits");
+        setTimeout(() => setError(""), 10000);
+        return;
+      }
+    }
     setPhoneNumber(value);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("submit");
+
+    const parsedPhoneNumber = phoneNumber && parsePhoneNumber(phoneNumber);
+    if (parsedPhoneNumber && parsedPhoneNumber.nationalNumber.length !== 10) {
+      console.log(parsedPhoneNumber.nationalNumber);
+      setError("Phone number should not less than 10 digits");
+      setTimeout(() => setError(""), 10000);
+      return;
+    }
 
     const setValues = async () => {
       let updatedUserNewData = {};
@@ -72,11 +106,22 @@ const ProfileCompleteForm: React.FC = () => {
       if (address) {
         updatedUserNewData = { ...updatedUserNewData, address };
       }
+      if (country) {
+        updatedUserNewData = { ...updatedUserNewData, country: country };
+      }
+      if (state) {
+        updatedUserNewData = { ...updatedUserNewData, state };
+      }
+      if (city) {
+        updatedUserNewData = { ...updatedUserNewData, city };
+      }
+      if (pincode) {
+        updatedUserNewData = { ...updatedUserNewData, pincode };
+      }
       return updatedUserNewData;
     };
 
     const data = await setValues();
-
     try {
       const res = await fetch("/api/user", {
         method: "PUT",
@@ -84,8 +129,18 @@ const ProfileCompleteForm: React.FC = () => {
       });
 
       if (res.ok) {
+        const resData = await res.json();
+        if (resData.error) {
+          setError(resData.error);
+          setTimeout(() => setError(""));
+          return;
+        }
+        router.refresh();
       }
     } catch (error) {}
+  };
+  const handleCityChange = (c: string) => {
+    setCity(c);
   };
 
   return (
@@ -96,21 +151,14 @@ const ProfileCompleteForm: React.FC = () => {
       <h1 className="mb-4 text-2xl font-semibold">Complete Your Profile</h1>
       <div className="p-4">
         <div className="mb-4 flex flex-col md:flex-row md:justify-between">
-          <div className="mb-4 md:w-1/2 md:pr-2">
+          <div className="mb-4 flex items-center gap-4 md:w-1/2 md:pr-2">
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-600"
             >
               <span className="text-red-600">*</span>Email:
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="input-field"
-              value={userData.email}
-              readOnly
-            />
+            <span>{userData.email}</span>
           </div>
         </div>
 
@@ -160,19 +208,33 @@ const ProfileCompleteForm: React.FC = () => {
             </label>
             <PhoneInput
               international
-              defaultCountry="US"
+              defaultCountry="IN"
               value={phoneNumber}
               onChange={handlePhoneChange}
               className="input-field w-full flex-1"
             />
+            {error?.includes("10") && (
+              <p className="text-sm text-red-500">*{error}</p>
+            )}
           </div>
 
           <div className="mb-4 md:w-1/2 md:pl-2">
+            <label>
+              <span className="text-red-600">*</span>Country:
+            </label>
+            <CountryDropdown
+              value={country}
+              onChange={(val) => setCountry(val)}
+            />
+          </div>
+        </div>
+        <div>
+          <div>
             <label
               htmlFor="location"
               className="block text-sm font-medium text-gray-600"
             >
-              Location/Address:
+              <span className="text-red-600">*</span>Location/Address:
             </label>
             {/* <LocationInput /> */}
             <input
@@ -182,6 +244,47 @@ const ProfileCompleteForm: React.FC = () => {
               className="input-field"
               onChange={(e) => setAddress(e.target.value)}
             />
+          </div>
+          <div>
+            <label>
+              {" "}
+              <span className="text-red-600">*</span>State:
+            </label>
+            <RegionDropdown
+              country={country}
+              value={state}
+              onChange={(val) => setState(val)}
+            />
+          </div>
+          <div>
+            <label>
+              {" "}
+              <span className="text-red-600">*</span>City:
+            </label>
+            <CityDropdown
+              country={country}
+              state={state}
+              val={city}
+              onSelect={handleCityChange}
+            />
+          </div>
+          <div>
+            <label>
+              {" "}
+              <span className="text-red-600">*</span>Pin code:
+            </label>
+            <input
+              type="text"
+              id="pincode"
+              name="pincode"
+              className="input-field"
+              value={pincode}
+              maxLength={6}
+              onChange={(e) => setPincode(e.target.value)}
+            />
+            {error?.includes("Pincode") && (
+              <p className="text-sm text-red-500">*{error}</p>
+            )}
           </div>
         </div>
 

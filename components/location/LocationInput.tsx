@@ -35,7 +35,7 @@ const LocationInput: React.FC = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+    <LoadScript googleMapsApiKey="">
       <PlacesAutocomplete
         value={address}
         onChange={setAddress}

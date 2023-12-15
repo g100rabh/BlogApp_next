@@ -9,14 +9,6 @@ const UserVerificationForm: React.FC = () => {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  const getProfileComplete = async () => {
-    const res = await fetch("/api/user", {
-      method: "GET",
-    });
-  };
-
-  getProfileComplete();
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -36,11 +28,9 @@ const UserVerificationForm: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, verificationCode }),
       });
-      // const data = await res.json();
-      // console.log(res);
 
       if (res.ok) {
-        alert("Verification done successfully");
+        // alert("Verification done successfully");
         router.push("/signin");
         setEmail("");
         setVerificationCode("");

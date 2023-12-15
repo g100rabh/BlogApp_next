@@ -24,9 +24,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         console.log(credentials);
         const email = credentials?.email;
-        const isEmailVerified = true;
+        const isVerified = true;
         const user = await prisma.user.findUnique({
-          where: { email, isEmailVerified },
+          where: { email, isVerified },
         });
 
         if (user) {
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: user.id,
               email: user.email,
-              isEmailVerified: user.isEmailVerified,
+              isVerified: user.isVerified,
             };
           } else {
             // Incorrect password
