@@ -247,6 +247,7 @@ const ProfileCompleteForm: React.FC = () => {
               name="location"
               className="input-field w-full"
               onChange={(e) => setAddress(e.target.value)}
+              value={address}
             />
           </div>
           <div className="mb-4">

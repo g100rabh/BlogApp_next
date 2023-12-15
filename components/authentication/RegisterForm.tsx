@@ -60,6 +60,10 @@ const RegisterForm: React.FC = () => {
         setError(`${data.message}`);
         setTimeout(() => setError(""), 30000);
         return;
+      } else if (data.message.includes("exists")) {
+        setError(`${data.message}`);
+        setTimeout(() => setError(""), 10000);
+        return;
       } else {
         // alert("Registration failed. Please try again.");
       }

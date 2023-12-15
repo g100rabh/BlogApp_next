@@ -10,7 +10,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
   const [error, setError] = useState<string>("");
-  
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -19,19 +19,19 @@ const LoginForm: React.FC = () => {
       password: password,
       redirect: false,
     });
-  
+
     if (result && !result.ok) {
       setError("Invalid credentials. Please try again.");
     }
-  
+
     if (result && !result.error) {
       router.push("/");
       router.refresh();
     } else if (result) {
-      alert(`${result.error}`);
+      setError(`${result.error}`);
     }
   };
-  
+
   if (error) {
     setTimeout(() => setError(""), 5000);
   }
