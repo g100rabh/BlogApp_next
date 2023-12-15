@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hash } from "bcrypt";
 import validator from "validator";
-import { useState } from "react";
 
 export async function POST(request: Request) {
   console.log(request);
@@ -13,8 +12,6 @@ export async function POST(request: Request) {
     if (validator.isEmail(email)) {
       if (validator.isStrongPassword(password)) {
         const hashedPassword = await hash(password, 10);
-
-        console.log(hashedPassword);
         const roleUser = "USER";
 
         const result = await prisma.user.create({
@@ -23,10 +20,13 @@ export async function POST(request: Request) {
             password: hashedPassword,
             role: roleUser,
             token: token,
+            otps: {
+              create: {
+                otp: token,
+              },
+            },
           },
         });
-
-        console.log("email:", email, "password:", password);
       } else {
         message =
           "Password must be at least 8 characters./Include at least one lowercase letter./One uppercase letter, one number./One special character.";

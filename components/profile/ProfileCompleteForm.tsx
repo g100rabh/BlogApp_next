@@ -132,7 +132,7 @@ const ProfileCompleteForm: React.FC = () => {
         const resData = await res.json();
         if (resData.error) {
           setError(resData.error);
-          setTimeout(() => setError(""));
+          setTimeout(() => setError(""), 10000);
           return;
         }
         router.refresh();
@@ -219,34 +219,41 @@ const ProfileCompleteForm: React.FC = () => {
           </div>
 
           <div className="mb-4 md:w-1/2 md:pl-2">
-            <label>
+            <label
+              htmlFor="country"
+              className="block text-sm font-medium text-gray-600"
+            >
               <span className="text-red-600">*</span>Country:
             </label>
             <CountryDropdown
               value={country}
               onChange={(val) => setCountry(val)}
+              className="input-field w-full"
             />
           </div>
         </div>
+
         <div>
-          <div>
+          <div className="mb-4">
             <label
               htmlFor="location"
               className="block text-sm font-medium text-gray-600"
             >
               <span className="text-red-600">*</span>Location/Address:
             </label>
-            {/* <LocationInput /> */}
             <input
               type="text"
               id="location"
               name="location"
-              className="input-field"
+              className="input-field w-full"
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div>
-            <label>
+          <div className="mb-4">
+            <label
+              htmlFor="state"
+              className="block text-sm font-medium text-gray-600"
+            >
               {" "}
               <span className="text-red-600">*</span>State:
             </label>
@@ -254,10 +261,14 @@ const ProfileCompleteForm: React.FC = () => {
               country={country}
               value={state}
               onChange={(val) => setState(val)}
+              className="input-field w-full"
             />
           </div>
-          <div>
-            <label>
+          <div className="mb-4">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium text-gray-600"
+            >
               {" "}
               <span className="text-red-600">*</span>City:
             </label>
@@ -266,10 +277,14 @@ const ProfileCompleteForm: React.FC = () => {
               state={state}
               val={city}
               onSelect={handleCityChange}
+              className="input-field w-full"
             />
           </div>
           <div>
-            <label>
+            <label
+              htmlFor="pincode"
+              className="block text-sm font-medium text-gray-600"
+            >
               {" "}
               <span className="text-red-600">*</span>Pin code:
             </label>
@@ -277,7 +292,7 @@ const ProfileCompleteForm: React.FC = () => {
               type="text"
               id="pincode"
               name="pincode"
-              className="input-field"
+              className="input-field w-full"
               value={pincode}
               maxLength={6}
               onChange={(e) => setPincode(e.target.value)}
@@ -287,7 +302,6 @@ const ProfileCompleteForm: React.FC = () => {
             )}
           </div>
         </div>
-
         <div className="mb-4">
           <label
             htmlFor="profilePic"
@@ -303,12 +317,14 @@ const ProfileCompleteForm: React.FC = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="btn-primary mt-4 rounded-sm bg-blue-800 px-4 py-2 font-bold text-white"
-        >
-          Submit
-        </button>
+        <div className="mb-8">
+          <button
+            type="submit"
+            className="btn-primary mt-4 rounded-sm bg-blue-800 px-4 py-2 font-bold text-white"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </form>
   );

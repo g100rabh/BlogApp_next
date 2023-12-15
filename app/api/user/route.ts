@@ -11,8 +11,16 @@ export async function POST(request: {
 
   try {
     const user = await prisma.user.findUnique({
-      where: { email: email, token: verificationCode },
+      where: {
+        email: email,
+        otps: {
+          some: {
+            otp: verificationCode,
+          },
+        },
+      },
     });
+    console.log(user);
 
     if (user) {
       const res = await prisma.user.update({
@@ -25,6 +33,9 @@ export async function POST(request: {
       });
 
       if (res) {
+        const deleteRes = await prisma.userOtp.delete({
+          where: { userId: res.id },
+        });
         return NextResponse.json(true);
       } else {
         return NextResponse.json(
