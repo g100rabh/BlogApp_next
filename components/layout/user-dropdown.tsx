@@ -6,12 +6,19 @@ import { LayoutDashboard, LogOut } from "lucide-react";
 import Popover from "@/components/shared/popover";
 import Image from "next/image";
 import { Session } from "next-auth";
+import { redirect, useRouter } from "next/navigation";
 
 export default function UserDropdown({ session }: { session: Session }) {
   const { email, image } = session?.user || {};
   const [openPopover, setOpenPopover] = useState(false);
+  const router = useRouter();
 
   if (!email) return null;
+
+  const handleLogout = () => {
+    signOut();
+    router.push("/signin");
+  };
 
   return (
     <div className="relative inline-block text-left">
@@ -29,15 +36,15 @@ export default function UserDropdown({ session }: { session: Session }) {
               </p>
             </div>
             <button
-              className="relative flex w-full cursor-not-allowed items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
-              disabled
+              className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
+              onClick={() => router.push("/dashboard")}
             >
               <LayoutDashboard className="h-4 w-4" />
               <p className="text-sm">Dashboard</p>
             </button>
             <button
               className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
-              onClick={() => signOut()}
+              onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />
               <p className="text-sm">Logout</p>

@@ -61,10 +61,11 @@ const RegisterForm: React.FC = () => {
         setTimeout(() => setError(""), 30000);
         return;
       } else {
-        alert("Registration failed. Please try again.");
+        // alert("Registration failed. Please try again.");
       }
     } else {
-      alert("Password does not match");
+      setError("Password does not match.");
+      setTimeout(() => setError(""), 10000);
     }
   };
 

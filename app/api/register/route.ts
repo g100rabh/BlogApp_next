@@ -32,7 +32,7 @@ export async function POST(request: Request) {
           "Password must be at least 8 characters./Include at least one lowercase letter./One uppercase letter, one number./One special character.";
       }
     } else {
-      message = "Email is not valid./";
+      message = "Email is not valid.";
     }
   } catch (err) {
     console.error(err);
